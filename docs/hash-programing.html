@@ -1,43 +1,14 @@
-<!doctype html>
-<html>
-  <head>
+  <!doctype html>
+  <html>
+    <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
-  <script type="text/javascript">
-  function createXmlHttp() {
-      
-      if (window.XMLHttpRequest) {
-          xmlHttp = new XMLHttpRequest(); 
-      } else {
-          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
-      }
-  }
-  window.onload = function getSource() {
-      
-      var url = "https://v1.alapi.cn/api/mingyan";
-      document.getElementById("dictum").innerHTML = ""; 
-      createXmlHttp(); 
-      xmlHttp.onreadystatechange = writeSource; 
-      xmlHttp.open("GET", url, true);
-      xmlHttp.send(null);
-  }
-  function writeSource() {
-      if (xmlHttp.readyState == 4) {
-          const json = xmlHttp.responseText;
-          const obj = JSON.parse(json);
-          if (obj.code == 200) {
-              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
-          } else document.getElementById("dictum").innerHTML = ""; 
-      }
-   
-  }
-  </script>
   <title>哈希表</title>
 </head>
 
-  <body>
-    <header class='header'>
+    <body>
+      <header class='header'>
   <a class="logo" href="./">home</a>
   <nav>
   </nav>
@@ -48,18 +19,18 @@
 
 </header>
 
-    <div class="container">
-      <h1 class="title">哈希表
-        <br>
-        <span class="subtitle"></span>
-      </h1>
-      <ul class="tags">
-        
-        <li><a href="/tags/programing">programing</a></li>
-        
-      </ul>
-      <blockquote><p id="dictum"></p></blockquote>
-      <p>
+      <div class="container">
+	<h1 class="title">哈希表
+	  <br>
+	  <span class="subtitle"></span>
+	</h1>
+	<ul class="tags">
+	  
+	  <li><a href="/tags/programing">programing</a></li>
+	  
+	</ul>
+	<blockquote><p id="dictum"></p></blockquote>
+	<p>
 散列表（Hash table，也叫哈希表），是根据关键字（Key value）来直接访问在内存存储位置的 数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问 记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
 <p>
 散列函数</p>
@@ -152,6 +123,113 @@ github上一个完整的hash table实现，同时实现长整型和字符串作�
 </div>
 </div>
 
-    </div>
+
+      </div>
+      <div class="zs-modal-bg"></div>
+      <div id="qrcode-panel">
+	<div class="zs-modal-head">
+	  <button id="donate-close" type="button" class="close">×</button>
+	  <span class="author"><a href="mailto:ljp@sangfor.com.cn">将快乐进行到底</a></span>
+	  <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+	</div>
+	<div class="zs-modal-body">
+	  <img id="wxqr" src="/assets/images/wechat-1.png" style="">
+	  <img id="zfbqr" style="display: none;" src="/assets/images/alipay-1.png">
+	</div>
+	<div class="zs-modal-footer">
+	  <label><input type="radio" name="pay" value="alipay" class="zs-type"><span class="zs-alipay"><img src="/assets/images/alipay-btn.png"/></span></label>
+	  <label><input type="radio" name="pay" value="wechat" class="zs-type" checked="checked"><span class="zs-wechat"><img src="/assets/images/wechat-btn.png"/></span></label>
+	</div>
+      </div>
+
+      <div class="entry-shang text-center">
+	<p>「真诚赞赏，手留余香」</p>
+	<button id="donate-btn" class="zs show-zs btn btn-bred">赞赏</button> 
+	<div class="share-component" data-disabled="tencent,diandian,linkedin,qq,qzone,google,twitter,facebook" data-description="Share.js - 一键分享到微博，QQ空间，腾讯微博，人人，豆瓣"></div>
+      </div>
+
+      <section>
+	<h2 id="comments">评论</h2>
+	<script src="https://utteranc.es/client.js"
+		repo="ctlaltlaltc/ctlaltlaltc.github.io"
+		issue-term="pathname"
+		theme="github-light"
+		crossorigin="anonymous"
+		async>
+	</script>
+      </section>
+
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="/assets/style/zhanshang.css">
+  <script type="text/javascript">
+    function createXmlHttp() {
+    
+    if (window.XMLHttpRequest) {
+    xmlHttp = new XMLHttpRequest(); 
+    } else {
+    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+    }
+    }
+    window.onload = function getSource() {
+
+    
+    var url = "https://v1.alapi.cn/api/mingyan";
+    initDonate()
+    document.getElementById("dictum").innerHTML = ""; 
+    createXmlHttp(); 
+    xmlHttp.onreadystatechange = writeSource; 
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+    }
+    function writeSource() {
+    if (xmlHttp.readyState == 4) {
+    const json = xmlHttp.responseText;
+    const obj = JSON.parse(json);
+    if (obj.code == 200) {
+    document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+    } else document.getElementById("dictum").innerHTML = ""; 
+    }
+
+    }
+
+    function initDonate(){
+    var donateBtn = document.getElementById('donate-btn');
+    var donatePopup = document.getElementById('qrcode-panel');
+    if(!donateBtn && !donatePopup){
+    return
+    }
+
+    donatePopup.style.display='none';
+
+    donateBtn.addEventListener('click',function(){
+    donatePopup.style.display='';
+    event.stopPropagation()
+    })
+    document.getElementById('donate-close').addEventListener('click',function(){
+    donatePopup.style.display='none';
+    event.stopPropagation()
+    })
+    document.getElementsByName("pay")[0].addEventListener('click',function() {
+    document.getElementById('wxqr').style.display='none';
+    document.getElementById('zfbqr').style.display='';
+    event.stopPropagation()
+    });
+    document.getElementsByName("pay")[1].addEventListener('click',function() {
+    document.getElementById('zfbqr').style.display='none';
+    document.getElementById('wxqr').style.display='';
+    event.stopPropagation()
+    });
+    document.querySelector('body').addEventListener('click',function() {
+    donatePopup.style.display='none';
+    event.stopPropagation()
+    });
+    donatePopup.addEventListener('click',function() {
+    event.stopPropagation()
+    });
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
   </body>
-</html>
+  </html>

@@ -1,43 +1,14 @@
-<!doctype html>
-<html>
-  <head>
+  <!doctype html>
+  <html>
+    <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
-  <script type="text/javascript">
-  function createXmlHttp() {
-      
-      if (window.XMLHttpRequest) {
-          xmlHttp = new XMLHttpRequest(); 
-      } else {
-          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
-      }
-  }
-  window.onload = function getSource() {
-      
-      var url = "https://v1.alapi.cn/api/mingyan";
-      document.getElementById("dictum").innerHTML = ""; 
-      createXmlHttp(); 
-      xmlHttp.onreadystatechange = writeSource; 
-      xmlHttp.open("GET", url, true);
-      xmlHttp.send(null);
-  }
-  function writeSource() {
-      if (xmlHttp.readyState == 4) {
-          const json = xmlHttp.responseText;
-          const obj = JSON.parse(json);
-          if (obj.code == 200) {
-              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
-          } else document.getElementById("dictum").innerHTML = ""; 
-      }
-   
-  }
-  </script>
   <title>世界这么大，我想去看看</title>
 </head>
 
-  <body>
-    <header class='header'>
+    <body>
+      <header class='header'>
   <a class="logo" href="./">home</a>
   <nav>
   </nav>
@@ -48,23 +19,130 @@
 
 </header>
 
-    <div class="container">
-      <h1 class="title">世界这么大，我想去看看
-        <br>
-        <span class="subtitle"></span>
-      </h1>
-      <ul class="tags">
-        
-        <li><a href="/tags/thoughts">Thoughts</a></li>
-        
-      </ul>
-      <blockquote><p id="dictum"></p></blockquote>
-      <p><img src="/assets/images/relax.jpeg" alt="/assets/images/relax.jpeg" title="/assets/images/relax.jpeg" /></p>
+      <div class="container">
+	<h1 class="title">世界这么大，我想去看看
+	  <br>
+	  <span class="subtitle"></span>
+	</h1>
+	<ul class="tags">
+	  
+	  <li><a href="/tags/thoughts">Thoughts</a></li>
+	  
+	</ul>
+	<blockquote><p id="dictum"></p></blockquote>
+	<p><img src="/assets/images/relax.jpeg" alt="/assets/images/relax.jpeg" title="/assets/images/relax.jpeg" /></p>
 <p>
 最近世界这么大，我想去看看，成为了网络上的一句流行语。简简单单的一名话，这何尝不是每个人都想去追求的呢？无奈生活体制的约束也只好把它浇灭在心头，每到星期五，双休日来到之时，放任着时光的流逝，没留下点感情色彩，顿时心头里有着些失落，下周一也快来了。</p>
 <p>
 世界这么大，我也想在合适的时间遇见对的人，和她一起去看看。</p>
 
-    </div>
+
+      </div>
+      <div class="zs-modal-bg"></div>
+      <div id="qrcode-panel">
+	<div class="zs-modal-head">
+	  <button id="donate-close" type="button" class="close">×</button>
+	  <span class="author"><a href="mailto:ljp@sangfor.com.cn">将快乐进行到底</a></span>
+	  <p class="tip"><i></i><span>请我喝杯咖啡？</span></p>
+	</div>
+	<div class="zs-modal-body">
+	  <img id="wxqr" src="/assets/images/wechat-1.png" style="">
+	  <img id="zfbqr" style="display: none;" src="/assets/images/alipay-1.png">
+	</div>
+	<div class="zs-modal-footer">
+	  <label><input type="radio" name="pay" value="alipay" class="zs-type"><span class="zs-alipay"><img src="/assets/images/alipay-btn.png"/></span></label>
+	  <label><input type="radio" name="pay" value="wechat" class="zs-type" checked="checked"><span class="zs-wechat"><img src="/assets/images/wechat-btn.png"/></span></label>
+	</div>
+      </div>
+
+      <div class="entry-shang text-center">
+	<p>「真诚赞赏，手留余香」</p>
+	<button id="donate-btn" class="zs show-zs btn btn-bred">赞赏</button> 
+	<div class="share-component" data-disabled="tencent,diandian,linkedin,qq,qzone,google,twitter,facebook" data-description="Share.js - 一键分享到微博，QQ空间，腾讯微博，人人，豆瓣"></div>
+      </div>
+
+      <section>
+	<h2 id="comments">评论</h2>
+	<script src="https://utteranc.es/client.js"
+		repo="ctlaltlaltc/ctlaltlaltc.github.io"
+		issue-term="pathname"
+		theme="github-light"
+		crossorigin="anonymous"
+		async>
+	</script>
+      </section>
+
+  </div>
+
+  <link rel="stylesheet" type="text/css" href="/assets/style/zhanshang.css">
+  <script type="text/javascript">
+    function createXmlHttp() {
+    
+    if (window.XMLHttpRequest) {
+    xmlHttp = new XMLHttpRequest(); 
+    } else {
+    xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+    }
+    }
+    window.onload = function getSource() {
+
+    
+    var url = "https://v1.alapi.cn/api/mingyan";
+    initDonate()
+    document.getElementById("dictum").innerHTML = ""; 
+    createXmlHttp(); 
+    xmlHttp.onreadystatechange = writeSource; 
+    xmlHttp.open("GET", url, true);
+    xmlHttp.send(null);
+    }
+    function writeSource() {
+    if (xmlHttp.readyState == 4) {
+    const json = xmlHttp.responseText;
+    const obj = JSON.parse(json);
+    if (obj.code == 200) {
+    document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+    } else document.getElementById("dictum").innerHTML = ""; 
+    }
+
+    }
+
+    function initDonate(){
+    var donateBtn = document.getElementById('donate-btn');
+    var donatePopup = document.getElementById('qrcode-panel');
+    if(!donateBtn && !donatePopup){
+    return
+    }
+
+    donatePopup.style.display='none';
+
+    donateBtn.addEventListener('click',function(){
+    donatePopup.style.display='';
+    event.stopPropagation()
+    })
+    document.getElementById('donate-close').addEventListener('click',function(){
+    donatePopup.style.display='none';
+    event.stopPropagation()
+    })
+    document.getElementsByName("pay")[0].addEventListener('click',function() {
+    document.getElementById('wxqr').style.display='none';
+    document.getElementById('zfbqr').style.display='';
+    event.stopPropagation()
+    });
+    document.getElementsByName("pay")[1].addEventListener('click',function() {
+    document.getElementById('zfbqr').style.display='none';
+    document.getElementById('wxqr').style.display='';
+    event.stopPropagation()
+    });
+    document.querySelector('body').addEventListener('click',function() {
+    donatePopup.style.display='none';
+    event.stopPropagation()
+    });
+    donatePopup.addEventListener('click',function() {
+    event.stopPropagation()
+    });
+    }
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
   </body>
-</html>
+  </html>

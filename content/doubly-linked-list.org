@@ -1,0 +1,75 @@
+#+TITLE: 内核双向链表的使用
+#+DATE: 2015-02-15
+#+TAGS[]: Programing
+#+OPTIONS: ^:nil
+
+#+NAME: dlist
+[[/assets/images/dlist.jpeg]]
+
+这篇文章记一下如何在应用程序中使用linux内核的双向链表数据结构。
+
+#+begin_quote
+从内核里获取 [[https://github.com/torvalds/linux/blob/master/include/linux/list.h][Simple doubly linked list implementation]] ， 稍加修改就可以在我们的应用层程序里使用linux内核的高效双向链表结构,
+比如可以从官方linux内核的双向链表实现裁减相应的哈希链表之后，增加offsetof和container_of两个强大的定位结构体指针位置和定义struct list_head，
+就可以加入到应用项目里使用了。例如: [[https://gist.github.com/9723/1e2b15079a25cef62e8f][lish.h]]
+#+end_quote
+
+一个栗子:
+#+begin_src c
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+  #include <assert.h>
+  #include "list.h"
+  struct user {
+    int uid;
+    int gid;
+    struct list_head node;
+  };
+  struct user * new_user()
+  {
+    struct user *p;
+    p = (struct user *)malloc(sizeof(struct user));
+    memset(p, 0, sizeof(struct user));
+    INIT_LIST_HEAD(&p->node);
+    assert(p);
+    return p;
+  }
+  void free_user(struct list_head* head)
+  {
+    struct user *pos, *npos;
+    list_for_each_entry_safe(pos, npos, head, node) {
+      list_del(&pos->node);
+      free(pos);
+    }
+  }
+  int main(int argc, char *argv[])
+  {
+    int i;
+    struct user *p_user, *pos;
+    LIST_HEAD(list_head); //定义链表头
+    for (i = 0; i < 3; i++) {
+      p_user = new_user();
+      list_add_tail(&p_user->node,&list_head);
+      p_user->gid = p_user->uid = i + 1000;
+    }
+    list_for_each_entry(pos, &list_head, node) {
+      printf("gid=%d, uid=%d\n", pos->gid, pos->uid);
+    }
+    free_user(&list_head);
+    return 0;
+  }
+#+end_src
+
+1. 定义一个user结构体系， 特别的node成员为链表操作指针
+2. LIST_HEAD 定义一个链表头
+3. new_user() 函数动态分配一个user结构内存并初始化自己的链表node成员
+4. list_add_tail() 函数所数据链接到链表头
+5. list_for_each_entry()函数遍历链表头，获取动态分配的结构数据
+6. free_user()函数功能遍历链表头，释放动态分配的结构数据
+
+更多链表操作功能看一下list.h的说明就很明白了。
+
+
+
+

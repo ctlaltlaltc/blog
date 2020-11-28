@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>世界这么大，我想去看看</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">世界这么大，我想去看看
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/thoughts">Thoughts</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/relax.jpeg" alt="/assets/images/relax.jpeg" title="/assets/images/relax.jpeg" /></p>
+<p>
+最近世界这么大，我想去看看，成为了网络上的一句流行语。简简单单的一名话，这何尝不是每个人都想去追求的呢？无奈生活体制的约束也只好把它浇灭在心头，每到星期五，双休日来到之时，放任着时光的流逝，没留下点感情色彩，顿时心头里有着些失落，下周一也快来了。</p>
+<p>
+世界这么大，我也想在合适的时间遇见对的人，和她一起去看看。</p>
+
+    </div>
+  </body>
+</html>

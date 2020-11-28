@@ -1,0 +1,66 @@
+  <!doctype html>
+  <html>
+    <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>Nodejs</title>
+</head>
+
+    <body>
+      <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+      <div class="container">
+	<h1 class="title">Nodejs</h1>
+	<ul class="posts">
+	  
+	  <li class="post">
+	    <a href="/nodejs-stack.html">
+	      <date>2015-06-13</date>
+	      <span>nodejs技术栈</span>
+	    </a>
+	  </li>
+	  
+	</ul>
+	<ul>
+      </div>
+    </body>
+  </html>

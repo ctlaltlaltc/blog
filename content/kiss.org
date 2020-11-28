@@ -1,0 +1,30 @@
+#+TITLE: 大道至简
+#+DATE: 2015-02-22
+#+TAGS[]: Thoughts
+#+OPTIONS: ^:nil
+
+#+NAME: kiss
+[[/assets/images/simple-kiss.jpeg]]
+
+简单理念, 随处可见, 比如苹果产品的[[http://www.amazon.com/Keep-It-Simple-Early-Design/dp/3897904071][简单]]易用，做一件事，做好它的[[http://zh.wikipedia.org/wiki/Unix%E5%93%B2%E5%AD%A6][Unix哲学]]， 宜家家居、无印良品等简单的风格设计...
+
+转一句公司内网研发设计关于简单的讨论
+
+#+begin_quote
+理解了简单, 你才会对某些需求说不.
+
+理解了简单, 你才会有意识地去控制复杂度.
+
+理解了简单, 你就不会把所有功能都堆到一个地方实现.
+
+理解了简单, 你就会很容易发现设计里一些不和谐的地方.
+
+理解了简单, 你就会慢慢具备看清问题本质的能力.
+
+但是, 简单不是那么容易理解的...
+#+end_quote
+
+简单就是力量，简而未减...
+
+
+

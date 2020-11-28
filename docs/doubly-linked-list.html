@@ -1,0 +1,143 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>内核双向链表的使用</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">内核双向链表的使用
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/programing">Programing</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/dlist.jpeg" alt="/assets/images/dlist.jpeg" title="/assets/images/dlist.jpeg" /></p>
+<p>
+这篇文章记一下如何在应用程序中使用linux内核的双向链表数据结构。</p>
+<blockquote>
+<p>从内核里获取 <a href="https://github.com/torvalds/linux/blob/master/include/linux/list.h">Simple doubly linked list implementation</a> ， 稍加修改就可以在我们的应用层程序里使用linux内核的高效双向链表结构,
+比如可以从官方linux内核的双向链表实现裁减相应的哈希链表之后，增加offsetof和container_of两个强大的定位结构体指针位置和定义struct list_head，
+就可以加入到应用项目里使用了。例如: <a href="https://gist.github.com/9723/1e2b15079a25cef62e8f">lish.h</a></p>
+</blockquote>
+<p>
+一个栗子:</p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff">  <span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>  <span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;stdlib.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>  <span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;string.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>  <span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;assert.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>  <span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&#34;list.h&#34;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>  <span style="color:#000;font-weight:bold">struct</span> user {
+    <span style="color:#458;font-weight:bold">int</span> uid;
+    <span style="color:#458;font-weight:bold">int</span> gid;
+    <span style="color:#000;font-weight:bold">struct</span> list_head node;
+  };
+  <span style="color:#000;font-weight:bold">struct</span> user <span style="color:#000;font-weight:bold">*</span> <span style="color:#900;font-weight:bold">new_user</span>()
+  {
+    <span style="color:#000;font-weight:bold">struct</span> user <span style="color:#000;font-weight:bold">*</span>p;
+    p <span style="color:#000;font-weight:bold">=</span> (<span style="color:#000;font-weight:bold">struct</span> user <span style="color:#000;font-weight:bold">*</span>)malloc(<span style="color:#000;font-weight:bold">sizeof</span>(<span style="color:#000;font-weight:bold">struct</span> user));
+    memset(p, <span style="color:#099">0</span>, <span style="color:#000;font-weight:bold">sizeof</span>(<span style="color:#000;font-weight:bold">struct</span> user));
+    INIT_LIST_HEAD(<span style="color:#000;font-weight:bold">&amp;</span>p<span style="color:#000;font-weight:bold">-&gt;</span>node);
+    assert(p);
+    <span style="color:#000;font-weight:bold">return</span> p;
+  }
+  <span style="color:#458;font-weight:bold">void</span> <span style="color:#900;font-weight:bold">free_user</span>(<span style="color:#000;font-weight:bold">struct</span> list_head<span style="color:#000;font-weight:bold">*</span> head)
+  {
+    <span style="color:#000;font-weight:bold">struct</span> user <span style="color:#000;font-weight:bold">*</span>pos, <span style="color:#000;font-weight:bold">*</span>npos;
+    list_for_each_entry_safe(pos, npos, head, node) {
+      list_del(<span style="color:#000;font-weight:bold">&amp;</span>pos<span style="color:#000;font-weight:bold">-&gt;</span>node);
+      free(pos);
+    }
+  }
+  <span style="color:#458;font-weight:bold">int</span> <span style="color:#900;font-weight:bold">main</span>(<span style="color:#458;font-weight:bold">int</span> argc, <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>argv[])
+  {
+    <span style="color:#458;font-weight:bold">int</span> i;
+    <span style="color:#000;font-weight:bold">struct</span> user <span style="color:#000;font-weight:bold">*</span>p_user, <span style="color:#000;font-weight:bold">*</span>pos;
+    LIST_HEAD(list_head); <span style="color:#998;font-style:italic">//定义链表头
+</span><span style="color:#998;font-style:italic"></span>    <span style="color:#000;font-weight:bold">for</span> (i <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0</span>; i <span style="color:#000;font-weight:bold">&lt;</span> <span style="color:#099">3</span>; i<span style="color:#000;font-weight:bold">++</span>) {
+      p_user <span style="color:#000;font-weight:bold">=</span> new_user();
+      list_add_tail(<span style="color:#000;font-weight:bold">&amp;</span>p_user<span style="color:#000;font-weight:bold">-&gt;</span>node,<span style="color:#000;font-weight:bold">&amp;</span>list_head);
+      p_user<span style="color:#000;font-weight:bold">-&gt;</span>gid <span style="color:#000;font-weight:bold">=</span> p_user<span style="color:#000;font-weight:bold">-&gt;</span>uid <span style="color:#000;font-weight:bold">=</span> i <span style="color:#000;font-weight:bold">+</span> <span style="color:#099">1000</span>;
+    }
+    list_for_each_entry(pos, <span style="color:#000;font-weight:bold">&amp;</span>list_head, node) {
+      printf(<span style="color:#d14">&#34;gid=%d, uid=%d</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, pos<span style="color:#000;font-weight:bold">-&gt;</span>gid, pos<span style="color:#000;font-weight:bold">-&gt;</span>uid);
+    }
+    free_user(<span style="color:#000;font-weight:bold">&amp;</span>list_head);
+    <span style="color:#000;font-weight:bold">return</span> <span style="color:#099">0</span>;
+  }</pre>
+</div>
+</div>
+<ol>
+<li>
+<p>定义一个user结构体系， 特别的node成员为链表操作指针</p>
+</li>
+<li>
+<p>LIST_HEAD 定义一个链表头</p>
+</li>
+<li>
+<p>new_user() 函数动态分配一个user结构内存并初始化自己的链表node成员</p>
+</li>
+<li>
+<p>list_add_tail() 函数所数据链接到链表头</p>
+</li>
+<li>
+<p>list_for_each_entry()函数遍历链表头，获取动态分配的结构数据</p>
+</li>
+<li>
+<p>free_user()函数功能遍历链表头，释放动态分配的结构数据</p>
+</li>
+</ol>
+<p>更多链表操作功能看一下list.h的说明就很明白了。</p>
+
+    </div>
+  </body>
+</html>

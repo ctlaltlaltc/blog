@@ -1,0 +1,123 @@
+#+TITLE: nodejs技术栈
+#+DATE: 2015-06-13
+#+TAGS[]: nodejs
+#+OPTIONS: ^:nil
+
+* javascript的全栈生态
+
+html,css,javascrit号称网页三剑客，在以前的技术位置这三剑客仅限于前端工程师的技术栈。 在nodejs出现之后，javascrit的胶水语言瞬间变成前后端并用的全栈语言，前端工程师不在仅仅只 写前端的DOM控制，现在他们写javascrit也可以像后端的python,ruby,php一样写丰富的后台服务应用。并 且想想，如果解决方案前后端都选择javascrit来维护和架构，那么项目中的学习和维护成本就变得 简单即是好的。
+
+全栈工程师，也叫全端工程师，英文Full Stack developer。是指掌握多种技能，并能利用多种技 能独立完成产品的人。在我看来做科技产品的话那就是软硬件都有的技能，前台能设计界面，后台能写 服务程序，能定制特定需求高性能等，并能独立开发出demo产品，但现在更多的互联网产品，因此独立完成 一个web产品,前后端兼施的技能也可以称为Full Stack developer.
+
+当然我不是全栈工程师，只是想体验一下O_o
+
+* 使用nodejs做一个curd后台服务
+
+- 建立一个app的package.json，就可以使用npm安装技术栈
+  
+  ~emacs package.json~
+  #+begin_src json
+  {
+    "name": "curd-app",
+    "version": "0.01"
+  }
+  #+end_src
+
+  命令行安装koa，一个小而美的框架
+
+  #+begin_src sh
+    npm install koa --save
+  #+end_src
+
+- koa 的hello,world. O_o
+
+  新建一个 ~app.js~ , 运行 ~node app.js~ ,浏览器访问 http://localhost:3000 就会出现hello world.
+
+  #+begin_src js
+    var koa = require('koa');
+    var app = koa();
+    app.use(function *() {
+	    this.body = 'Hello World';
+    });
+    app.listen(3000);
+  #+end_src
+
+- 为hello world的访问添加日志，这需要添加一个中间件
+
+  #+begin_src sh
+    npm install koa-logger --save
+  #+end_src
+
+  修改hello world
+
+  #+begin_src js
+    var koa = require('koa');
+    var app = koa();
+    var logger = require('koa-logger');
+    app.use(logger());
+    app.use(function *() {
+	    this.body = 'Hello World';
+    });
+    app.listen(3000);
+  #+end_src
+
+  这时浏览器再次访问hello world后台就会打印访问日志信息
+
+  #+begin_example
+<-- GET /
+--> GET / 200 139ms -
+<-- GET /favicon.ico
+--> GET /favicon.ico 200 6ms -
+  #+end_example
+
+- 实现CURD功能，这需要添加一个路由中间件
+
+  #+begin_src sh
+    npm install koa-route --save
+  #+end_src
+
+  修改hello world
+
+  #+begin_src js
+    var koa = require('koa');
+    var app = koa();
+    var logger = require('koa-logger');
+    var route = require('koa-route');
+    app.use(logger());
+    // CURD Create,Update,Read,Delete
+    app.use(route.get('/', function *Read(next) {
+	if ('GET' != this.method) return yield next;
+	this.body = 'Read';
+    }));
+    app.use(route.post('/add/', function *Create(next) {
+	if ('POST' != this.method) return yield next;
+	this.body = 'Create';
+    }));
+    app.use(route.delete('/delete/', function *Delete(next) {
+	if ('DELETE' != this.method) return yield next;
+	this.body = 'Delete';
+    }));
+    app.use(route.put('/update', function *Update(next) {
+	if ('PUT' != this.method) return yield next;
+	this.body = 'Update'
+    }));
+    app.use(function *(next) {
+	this.body = 'Hello World';
+    });
+    app.listen(3000);
+  #+end_src
+
+  运行 ~nodejs app.js~ ，这时浏览器分别使用不同的方法访问hello world后台就会打印访问日志信息
+
+  当然有些方法浏览器不好请求，可以找个 REST Client工具进行调试
+
+  #+begin_example
+<-- GET /?
+--> GET /? 200 9ms -
+<-- POST /add
+--> POST /add 200 5ms -
+<-- PUT /update?
+--> PUT /update? 200 2ms -
+<-- DELETE /delete?
+--> DELETE /delete? 200 16ms -
+  #+end_example

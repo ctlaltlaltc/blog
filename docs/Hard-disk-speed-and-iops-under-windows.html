@@ -1,0 +1,175 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>windows计算磁盘速率和iops</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">windows计算磁盘速率和iops
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/programing">Programing</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/windows-iops.jpeg" alt="/assets/images/windows-iops.jpeg" title="/assets/images/windows-iops.jpeg" /></p>
+<p>
+windows上获取磁盘的信息有多种方式</p>
+<ol>
+<li>
+<p>使用wmi接口获取</p>
+</li>
+<li>
+<p>fsutil工具</p>
+</li>
+<li>
+<p>代码级调用windows api获取磁盘性能信息</p>
+</li>
+</ol>
+<p>准确性来看，调用windows api当然是最精确的了。</p>
+<p>
+下面使用windows的ioctl来获取硬盘相关结构数据举个栗子。</p>
+<p>
+DeviceIoControl相关例子参照: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363216(v=vs.85).aspx">DeviceIoControl</a></p>
+<p>
+硬盘的ioctl 控制码可以在msdn上找到说明: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa365183(v=vs.85)">IOCTL_DISK_PERFORMANCE</a></p>
+<p>
+通过调用DeviceIoControl传参控制码得到结构数据DISK_PERFORMANCE: <a href="https://msdn.microsoft.com/en-us/library/windows/desktop/aa363991(v=vs.85).aspx">DISK_PERFORMANCE</a></p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff"><span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;windows.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;winioctl.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic">#include</span> <span style="color:#999;font-weight:bold;font-style:italic">&lt;stdio.h&gt;</span><span style="color:#999;font-weight:bold;font-style:italic">
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>
+<span style="color:#999;font-weight:bold;font-style:italic">#define wszDrive L&#34;\\\\.\\PhysicalDrive0&#34;
+</span><span style="color:#999;font-weight:bold;font-style:italic"></span>
+BOOL <span style="color:#900;font-weight:bold">GetDiskPerformance</span>(LPWSTR wszPath, DISK_PERFORMANCE <span style="color:#000;font-weight:bold">*</span>pdg)
+{
+  HANDLE hDevice <span style="color:#000;font-weight:bold">=</span> INVALID_HANDLE_VALUE;  <span style="color:#998;font-style:italic">// handle to the drive to be examined
+</span><span style="color:#998;font-style:italic"></span>  BOOL bResult   <span style="color:#000;font-weight:bold">=</span> FALSE;                 <span style="color:#998;font-style:italic">// results flag
+</span><span style="color:#998;font-style:italic"></span>  DWORD junk     <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">0</span>;                     <span style="color:#998;font-style:italic">// discard results
+</span><span style="color:#998;font-style:italic"></span>
+  hDevice <span style="color:#000;font-weight:bold">=</span> CreateFileW(wszPath,          <span style="color:#998;font-style:italic">// drive to open
+</span><span style="color:#998;font-style:italic"></span>                        <span style="color:#099">0</span>,                <span style="color:#998;font-style:italic">// no access to the drive
+</span><span style="color:#998;font-style:italic"></span>                        FILE_SHARE_READ <span style="color:#000;font-weight:bold">|</span> <span style="color:#998;font-style:italic">// share mode
+</span><span style="color:#998;font-style:italic"></span>                        FILE_SHARE_WRITE,
+                        <span style="color:#0086b3">NULL</span>,             <span style="color:#998;font-style:italic">// default security attributes
+</span><span style="color:#998;font-style:italic"></span>                        OPEN_EXISTING,    <span style="color:#998;font-style:italic">// disposition
+</span><span style="color:#998;font-style:italic"></span>                        <span style="color:#099">0</span>,                <span style="color:#998;font-style:italic">// file attributes
+</span><span style="color:#998;font-style:italic"></span>                        <span style="color:#0086b3">NULL</span>);            <span style="color:#998;font-style:italic">// do not copy file attributes
+</span><span style="color:#998;font-style:italic"></span>
+  <span style="color:#000;font-weight:bold">if</span> (hDevice <span style="color:#000;font-weight:bold">==</span> INVALID_HANDLE_VALUE)    <span style="color:#998;font-style:italic">// cannot open the drive
+</span><span style="color:#998;font-style:italic"></span>  {
+    <span style="color:#000;font-weight:bold">return</span> (FALSE);
+  }
+
+  bResult <span style="color:#000;font-weight:bold">=</span> DeviceIoControl(hDevice,                       <span style="color:#998;font-style:italic">// device to be queried
+</span><span style="color:#998;font-style:italic"></span>                            IOCTL_DISK_PERFORMANCE,        <span style="color:#998;font-style:italic">// operation to perform
+</span><span style="color:#998;font-style:italic"></span>                            <span style="color:#0086b3">NULL</span>, <span style="color:#099">0</span>,                       <span style="color:#998;font-style:italic">// no input buffer
+</span><span style="color:#998;font-style:italic"></span>                            pdg, <span style="color:#000;font-weight:bold">sizeof</span>(<span style="color:#000;font-weight:bold">*</span>pdg),             <span style="color:#998;font-style:italic">// output buffer
+</span><span style="color:#998;font-style:italic"></span>                            <span style="color:#000;font-weight:bold">&amp;</span>junk,                         <span style="color:#998;font-style:italic">// # bytes returned
+</span><span style="color:#998;font-style:italic"></span>                            (LPOVERLAPPED) <span style="color:#0086b3">NULL</span>);          <span style="color:#998;font-style:italic">// synchronous I/O
+</span><span style="color:#998;font-style:italic"></span>
+  CloseHandle(hDevice);
+
+  <span style="color:#000;font-weight:bold">return</span> (bResult);
+}
+
+<span style="color:#458;font-weight:bold">int</span> <span style="color:#900;font-weight:bold">main</span>(<span style="color:#458;font-weight:bold">int</span> argc, <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>argv[])
+{
+  DISK_PERFORMANCE ddg <span style="color:#000;font-weight:bold">=</span> {<span style="color:#099">0</span>}; <span style="color:#998;font-style:italic">//disk performance statistics
+</span><span style="color:#998;font-style:italic"></span>  BOOL aResult <span style="color:#000;font-weight:bold">=</span> FALSE;
+  aResult <span style="color:#000;font-weight:bold">=</span> GetDiskPerformance(wszDrive, <span style="color:#000;font-weight:bold">&amp;</span>ddg);
+  <span style="color:#000;font-weight:bold">if</span> (aResult)
+  {
+	wprintf (<span style="color:#d14">L</span><span style="color:#d14">&#34;BytesRead     = %I64d</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, ddg.BytesRead);
+	wprintf (<span style="color:#d14">L</span><span style="color:#d14">&#34;BytesWritten  = %I64d</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, ddg.BytesWritten);
+	wprintf (<span style="color:#d14">L</span><span style="color:#d14">&#34;ReadCount     = %I64d</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, ddg.ReadCount);
+	wprintf (<span style="color:#d14">L</span><span style="color:#d14">&#34;WriteCount    = %I64d</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, ddg.WriteCount);
+  }
+  <span style="color:#000;font-weight:bold">else</span>
+  {
+    wprintf (<span style="color:#d14">L</span><span style="color:#d14">&#34;GetDiskPerformance failed. Error %ld.</span><span style="color:#d14">\n</span><span style="color:#d14">&#34;</span>, GetLastError ());
+  }
+  <span style="color:#000;font-weight:bold">return</span> <span style="color:#099">0</span>;
+}</pre>
+</div>
+</div>
+<p>
+如果使用mingw编译的话，有可能mingw版本DISK_PERFORMANCE结构体不兼容，导致 DeviceIoControl调用时出错。
+解决的办法可以自定义个DISK_PERFORMANCE_WIN_32，然后使用 mingw编译即可。</p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff"><span style="color:#000;font-weight:bold">typedef</span> <span style="color:#000;font-weight:bold">struct</span> _DISK_PERFORMANCE_WIN_32 {
+       LARGE_INTEGER BytesRead;
+       LARGE_INTEGER BytesWritten;
+       LARGE_INTEGER ReadTime;
+       LARGE_INTEGER WriteTime;
+       LARGE_INTEGER IdleTime;
+       DWORD         ReadCount;
+       DWORD         WriteCount;
+       DWORD         QueueDepth;
+       DWORD         SplitCount;
+       LARGE_INTEGER QueryTime;
+       DWORD         StorageDeviceNumber;
+       WCHAR         StorageManagerName[<span style="color:#099">8</span>];
+} DISK_PERFORMANCE_WIN_32;</pre>
+</div>
+</div>
+<p>
+通过得到结构体数据就可以用来计算磁盘速率和iops了。</p>
+<p>
+disk_rate = (ddg.BytesRead - pre_BytesRead) / Time_interval</p>
+<p>
+iops = (ddg.ReadCount - pre_ReadCount) / Time_interval</p>
+
+    </div>
+  </body>
+</html>

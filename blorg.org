@@ -1,0 +1,138 @@
+#+AUTHOR: ljp
+#+EMAIL: ljp@sangfor.com.cn
+#+TITLE: happy writing
+#+BASE_URL: /
+#+OPTIONS: toc:nil title:nil
+#+CONTENT: ./content
+#+PUBLIC: ./docs
+
+* templates
+** head
+#+name: head
+#+begin_src html
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      //根据window.XMLHttpRequest对象是否存在使用不同的创建方式 
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); //FireFox、Opera等浏览器支持的创建方式 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); //IE浏览器支持的创建方式 
+      }
+  }
+  window.onload = function getSource() {
+      //获取目标地址信息 
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; //提示正在加载 
+      createXmlHttp(); //创建XMLHttpRequest对象 
+      xmlHttp.onreadystatechange = writeSource; //设置回调函数 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; //提示加载失败
+      }
+   
+  }
+  </script>
+  <title>{{ .Title }}</title>
+</head>
+#+end_src
+** header
+#+name: header
+#+begin_src html
+<header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+#+end_src
+** item
+#+name: item
+#+begin_src html
+<!doctype html>
+<html>
+  {{ template "head" . }}
+  <body>
+    {{ template "header" . }}
+    <div class="container">
+      <h1 class="title">{{ .Title }}
+        <br>
+        <span class="subtitle">{{ .Subtitle }}</span>
+      </h1>
+      <ul class="tags">
+        {{ range .Tags }}
+        <li><a href="/tags/{{ . | Slugify }}">{{ . }}</a></li>
+        {{ end }}
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      {{ .Content }}
+    </div>
+  </body>
+</html>
+#+end_src
+
+** list
+#+name: list
+#+begin_src html
+  <!doctype html>
+  <html>
+    {{ template "head" . }}
+    <body>
+      {{ template "header" . }}
+      <div class="container">
+	<h1 class="title">{{ .Title }}</h1>
+	<ul class="posts">
+	  {{ range .Pages }}
+	  <li class="post">
+	    <a href="{{ .PermaLink }}">
+	      <date>{{ .Date.Format "2006-01-02" }}</date>
+	      <span>{{ .Title }}</span>
+	    </a>
+	  </li>
+	  {{ end }}
+	</ul>
+	<ul>
+      </div>
+    </body>
+  </html>
+#+end_src
+
+** index
+#+name: index
+#+begin_src html
+  <!doctype html>
+  <html>
+    {{ template "head" . }}
+    <body>
+      {{ template "header" . }}
+      <div class="container">
+	<h1 class="title">{{ .Title }}</h1>
+	<ul class="posts">
+	  {{ range .Pages }}
+	  <li class="post">
+	    <a href="{{ .PermaLink }}">
+	      <date>{{ .Date.Format "2006-01-02" }}</date>
+	      <span>{{ .Title }}</span>
+	    </a>
+	  </li>
+	  {{ end }}
+	</ul>
+	<ul>
+      </div>
+    </body>
+  </html>
+#+end_src

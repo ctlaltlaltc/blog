@@ -1,0 +1,157 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>哈希表</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">哈希表
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/programing">programing</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p>
+散列表（Hash table，也叫哈希表），是根据关键字（Key value）来直接访问在内存存储位置的 数据结构。也就是说，它通过计算一个关于键值的函数，将所需查询的数据映射到表中一个位置来访问 记录，这加快了查找速度。这个映射函数称做散列函数，存放记录的数组称做散列表。</p>
+<p>
+散列函数</p>
+<ul>
+<li>
+<p>使用整型数作为key的散列函数</p>
+<p>
+参考: <a href="http://stackoverflow.com/a/12996028">http://stackoverflow.com/a/12996028</a></p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff">  <span style="color:#000;font-weight:bold">static</span> <span style="color:#000;font-weight:bold">inline</span> <span style="color:#458;font-weight:bold">long</span> <span style="color:#458;font-weight:bold">int</span> <span style="color:#900;font-weight:bold">hashInt</span>(<span style="color:#458;font-weight:bold">long</span> <span style="color:#458;font-weight:bold">int</span> x)
+  {
+   x <span style="color:#000;font-weight:bold">=</span> ((x <span style="color:#000;font-weight:bold">&gt;&gt;</span> <span style="color:#099">16</span>) <span style="color:#000;font-weight:bold">^</span> x) <span style="color:#000;font-weight:bold">*</span> <span style="color:#099">0x45d9f3b</span>;
+   x <span style="color:#000;font-weight:bold">=</span> ((x <span style="color:#000;font-weight:bold">&gt;&gt;</span> <span style="color:#099">16</span>) <span style="color:#000;font-weight:bold">^</span> x) <span style="color:#000;font-weight:bold">*</span> <span style="color:#099">0x45d9f3b</span>;
+   x <span style="color:#000;font-weight:bold">=</span> ((x <span style="color:#000;font-weight:bold">&gt;&gt;</span> <span style="color:#099">16</span>) <span style="color:#000;font-weight:bold">^</span> x);
+   <span style="color:#000;font-weight:bold">return</span> x;
+  }</pre>
+</div>
+</div>
+</li>
+<li>
+<p>使用字符串作为key的散列函数</p>
+<p>
+参考: <a href="http://www.cse.yorku.ca/~oz/hash.html">http://www.cse.yorku.ca/~oz/hash.html</a></p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff">  <span style="color:#000;font-weight:bold">static</span> <span style="color:#000;font-weight:bold">inline</span> <span style="color:#458;font-weight:bold">long</span> <span style="color:#458;font-weight:bold">int</span> <span style="color:#900;font-weight:bold">hashString</span>(<span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span> str)
+  {
+   <span style="color:#458;font-weight:bold">unsigned</span> <span style="color:#458;font-weight:bold">long</span> hash <span style="color:#000;font-weight:bold">=</span> <span style="color:#099">5381</span>;
+   <span style="color:#458;font-weight:bold">int</span> c;
+
+   <span style="color:#000;font-weight:bold">while</span> (c <span style="color:#000;font-weight:bold">=</span> <span style="color:#000;font-weight:bold">*</span>str<span style="color:#000;font-weight:bold">++</span>)
+    hash <span style="color:#000;font-weight:bold">=</span> ((hash <span style="color:#000;font-weight:bold">&lt;&lt;</span> <span style="color:#099">5</span>) <span style="color:#000;font-weight:bold">+</span> hash) <span style="color:#000;font-weight:bold">+</span> c; <span style="color:#998;font-style:italic">/* hash * 33 + c */</span>
+   <span style="color:#000;font-weight:bold">return</span> hash;
+  }</pre>
+</div>
+</div>
+</li>
+</ul>
+<p>实际的工程问题，哈希还有其它术语，如构造散列函数、处理碰撞等，具体可参考: <a href="http://zh.wikipedia.org/wiki/%E5%93%88%E5%B8%8C%E8%A1%A8">哈希表</a></p>
+<p>
+更为高级的哈希使用场景，可阅读linux内核相关的哈希表应用。</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+使用字符串作为key的散列函数来实现哈希表数据结构
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>
+哈希表的实现关键是是，选择合适的构造散列函数、构造散列表。</p>
+<ul>
+<li>
+<p>散列函数</p>
+<p>
+使用上面所提到的 <code>使用字符串作为key的散列函数</code></p>
+</li>
+<li>
+<p>散列表</p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff">  <span style="color:#000;font-weight:bold">struct</span> HashEntry
+  {
+   <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>key;
+   <span style="color:#458;font-weight:bold">void</span>  <span style="color:#000;font-weight:bold">*</span>value;
+   HashEntry <span style="color:#000;font-weight:bold">*</span>next;
+  };
+
+  <span style="color:#000;font-weight:bold">struct</span> HashTable
+  {
+   HashEntry <span style="color:#000;font-weight:bold">**</span>bucket; <span style="color:#998;font-style:italic">// pointer to array of buckets
+</span><span style="color:#998;font-style:italic"></span>   size_t buckets;
+  };</pre>
+</div>
+</div>
+<p>
+几个接口实现:</p>
+<div class="src src-c">
+<div class="highlight">
+<pre style="background-color:#fff">  HashTable <span style="color:#000;font-weight:bold">*</span>create_hash( size_t buckets )
+  <span style="color:#458;font-weight:bold">int</span> add_ptr_by_str( HashTable <span style="color:#000;font-weight:bold">*</span>table, <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>key, <span style="color:#458;font-weight:bold">void</span> <span style="color:#000;font-weight:bold">*</span>ptr )
+  <span style="color:#458;font-weight:bold">void</span><span style="color:#000;font-weight:bold">*</span> get_ptr_by_str( HashTable <span style="color:#000;font-weight:bold">*</span>table, <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>key )
+  <span style="color:#458;font-weight:bold">int</span> del_by_str( HashTable <span style="color:#000;font-weight:bold">*</span>table, <span style="color:#458;font-weight:bold">char</span> <span style="color:#000;font-weight:bold">*</span>key )
+  <span style="color:#458;font-weight:bold">int</span> delete_hash( HashTable <span style="color:#000;font-weight:bold">*</span>table )</pre>
+</div>
+</div>
+</li>
+</ul>
+<p>简单的哈希实现源码: <a href="https://gist.github.com/9723/16d0c1c65d8d3503ec17">hash.c</a></p>
+<p>
+github上一个完整的hash table实现，同时实现长整型和字符串作为key,支持多线程，详细学习可 参考: <a href="https://github.com/watmough/jwHash">https://github.com/watmough/jwHash</a></p>
+</div>
+</div>
+
+    </div>
+  </body>
+</html>

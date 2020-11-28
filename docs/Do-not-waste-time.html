@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>休闲时光</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">休闲时光
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/thoughts">Thoughts</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/starbucks.jpeg" alt="/assets/images/starbucks.jpeg" title="/assets/images/starbucks.jpeg" /></p>
+<p>
+周末天气晴朗，阳光晒在身上，暖和和的，无事可做。</p>
+<p>
+独自上街闲逛。</p>
+<p>
+到了图书馆，看了书。</p>
+<p>
+走进遍布世界的美人鱼，点上一杯拿铁。</p>
+<p>
+居家和工作之外的第三空间。</p>
+<p>
+随性的环境，听歌，上网。</p>
+<p>
+一天过去了。</p>
+<p>
+别把时间给了浪费,休闲<sup class="footnote-reference"><a id="footnote-reference-1" href="#footnote-1">1</a></sup>也无妨。</p>
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+Footnotes
+</h2>
+</div>
+<div class="footnotes">
+<hr class="footnotes-separatator">
+<div class="footnote-definitions">
+<div class="footnote-definition">
+<sup id="footnote-1"><a href="#footnote-reference-1">1</a></sup>
+<div class="footnote-body">
+<p>休闲不特指休闲享受，而是做事感到愉悦、自在的过程 </p>
+</div>
+</div>
+</div>
+</div>
+
+    </div>
+  </body>
+</html>

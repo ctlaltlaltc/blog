@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>在互联网信息爆炸的今天，如何获取高质量的内容</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">在互联网信息爆炸的今天，如何获取高质量的内容
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/thoughts">Thoughts</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/google-hacking.jpeg" alt="/assets/images/google-hacking.jpeg" title="/assets/images/google-hacking.jpeg" /></p>
+<p>
+说说在互联网信息爆炸的今天，如何获取高质量的内容和快速精准搜索的一些技巧。</p>
+<p>
+主观的说搜索东西还是使用google比较靠谱，准，算法公平，搜索内容质量相对较高，相比而言百度的搜索，那都是谁投得多钱就显示谁商业公司.
+导致百度的搜索结果都是广告，不准，不公平，垃圾内容比较多，筛选内容成本也相对较高，所以搜索首选应该是google，实在搜索不满意再用百度一下，
+首选用哪一个搜索引擎也看出一个人的技术品味。</p>
+<p>
+当然有人会说，google不是被国家防火墙封堵了吗？这里要特别说一下，现在有个 <a href="http://www.gfsoso.com/">gfsoso</a> 网站可以代替被墙google，搜索内容和google hk是一样的，感谢gfsoso服务。</p>
+<p>
+以下列举一些在今天搜索内容质量比较高的，不涉及程序员获取内容。。</p>
+<ul>
+<li>
+<p>google</p>
+<p>
+平常搜索根据你要获取的内容，结合google的一些搜索技巧，搜索的内容一般第一页的显示就是自己想要的了。
+比如你想找一些某一领域研究可以搜索文件后缀为pdf的文件，搞研究的写的文件都是用pdf保存的啊。
+可以这样搜索: <code>filetype:pdf qemu</code> ，搜索别人的博客: <code>inurl:cn inurl:blog qemu</code> ， 搜索学校的: <code>inurl:edu.cn qemu</code></p>
+<p>
+具体更详细的搜索技巧可参照网上的一篇博文<a href="http://tech.163.com/05/0823/14/1RRJLVSM00091589.html">Google Hacking 的实现以及应用</a></p>
+</li>
+</ul>
+<p>以下是一些社交性质的搜索。</p>
+<ul>
+<li>
+<p><a href="http://s.weibo.com/">徽博</a></p>
+<p>
+微博上搜索，往往能搜索比较高质量的内容，实用性比较强，有些都是发自内容的分享。</p>
+</li>
+<li>
+<p><a href="https://weixin.sogou.com/">微信</a></p>
+<p>
+有些文章还是比较深入。最近的搜索也比较好。</p>
+</li>
+<li>
+<p><a href="http://www.zhihu.com/">知乎</a></p>
+<p>
+与世界分享你的知识、经验和见解。一个真实的网络问答社区,帮助你寻找答案,分享知识。</p>
+</li>
+<li>
+<p><a href="https://v2ex.com/">v2ex</a></p>
+<p>
+一个神奇的网站，可以比较快速了解当前比较热门的互联网的话题、产品、观点。</p>
+</li>
+</ul>
+<p>其实活在信息暴涨的时代，如何快速获取和敏捷的发现一些比较高质量的内容，关乎个人的知识更新速度。 当然接触新的事物也是要在某一方面有所基础。</p>
+
+    </div>
+  </body>
+</html>

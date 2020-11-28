@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>大道至简</title>
+</head>
+
+  <body>
+    <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+    <div class="container">
+      <h1 class="title">大道至简
+        <br>
+        <span class="subtitle"></span>
+      </h1>
+      <ul class="tags">
+        
+        <li><a href="/tags/thoughts">Thoughts</a></li>
+        
+      </ul>
+      <blockquote><p id="dictum"></p></blockquote>
+      <p><img src="/assets/images/simple-kiss.jpeg" alt="/assets/images/simple-kiss.jpeg" title="/assets/images/simple-kiss.jpeg" /></p>
+<p>
+简单理念, 随处可见, 比如苹果产品的<a href="http://www.amazon.com/Keep-It-Simple-Early-Design/dp/3897904071">简单</a>易用，做一件事，做好它的<a href="http://zh.wikipedia.org/wiki/Unix%E5%93%B2%E5%AD%A6">Unix哲学</a>， 宜家家居、无印良品等简单的风格设计…</p>
+<p>
+转一句公司内网研发设计关于简单的讨论</p>
+<blockquote>
+<p>理解了简单, 你才会对某些需求说不.</p>
+<p>
+理解了简单, 你才会有意识地去控制复杂度.</p>
+<p>
+理解了简单, 你就不会把所有功能都堆到一个地方实现.</p>
+<p>
+理解了简单, 你就会很容易发现设计里一些不和谐的地方.</p>
+<p>
+理解了简单, 你就会慢慢具备看清问题本质的能力.</p>
+<p>
+但是, 简单不是那么容易理解的…</p>
+</blockquote>
+<p>
+简单就是力量，简而未减…</p>
+
+    </div>
+  </body>
+</html>

@@ -1,0 +1,115 @@
+  <!doctype html>
+  <html>
+    <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="/assets/style/style.css" type="text/css" />
+  <script type="text/javascript">
+  function createXmlHttp() {
+      
+      if (window.XMLHttpRequest) {
+          xmlHttp = new XMLHttpRequest(); 
+      } else {
+          xmlHttp = new ActiveXObject("Microsoft.XMLHTTP"); 
+      }
+  }
+  window.onload = function getSource() {
+      
+      var url = "https://v1.alapi.cn/api/mingyan";
+      document.getElementById("dictum").innerHTML = ""; 
+      createXmlHttp(); 
+      xmlHttp.onreadystatechange = writeSource; 
+      xmlHttp.open("GET", url, true);
+      xmlHttp.send(null);
+  }
+  function writeSource() {
+      if (xmlHttp.readyState == 4) {
+          const json = xmlHttp.responseText;
+          const obj = JSON.parse(json);
+          if (obj.code == 200) {
+              document.getElementById("dictum").innerHTML = obj.data.content + '-「' + obj.data.author + '」';
+          } else document.getElementById("dictum").innerHTML = ""; 
+      }
+   
+  }
+  </script>
+  <title>happy writing</title>
+</head>
+
+    <body>
+      <header class='header'>
+  <a class="logo" href="./">home</a>
+  <nav>
+  </nav>
+  <nav>
+    <a href="/about.html">about</a>
+    <a href="https://github.com/ctlaltlaltc">github</a>
+  </nav>
+
+</header>
+
+      <div class="container">
+	<h1 class="title">happy writing</h1>
+	<ul class="posts">
+	  
+	  <li class="post">
+	    <a href="/nodejs-stack.html">
+	      <date>2015-06-13</date>
+	      <span>nodejs技术栈</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/hash-programing.html">
+	      <date>2015-05-19</date>
+	      <span>哈希表</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/kiss.html">
+	      <date>2015-02-22</date>
+	      <span>大道至简</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/Do-not-waste-time.html">
+	      <date>2015-02-18</date>
+	      <span>休闲时光</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/The-world-is-so-big-I-want-to-have-a-look.html">
+	      <date>2015-02-17</date>
+	      <span>世界这么大，我想去看看</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/doubly-linked-list.html">
+	      <date>2015-02-15</date>
+	      <span>内核双向链表的使用</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/how-to-get-high-quality-content.html">
+	      <date>2015-02-15</date>
+	      <span>在互联网信息爆炸的今天，如何获取高质量的内容</span>
+	    </a>
+	  </li>
+	  
+	  <li class="post">
+	    <a href="/Hard-disk-speed-and-iops-under-windows.html">
+	      <date>2015-02-14</date>
+	      <span>windows计算磁盘速率和iops</span>
+	    </a>
+	  </li>
+	  
+	</ul>
+	<ul>
+      </div>
+    </body>
+  </html>
